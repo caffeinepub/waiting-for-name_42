@@ -46,7 +46,7 @@ import { toast } from "sonner";
 import type { Product } from "../backend";
 
 export default function AdminDashboard() {
-  const { loginStatus, login } = useInternetIdentity();
+  const { loginStatus, login, isLoggingIn, isLoginError, loginError } = useInternetIdentity();
   const isLoggedIn = loginStatus === "success";
 
   if (!isLoggedIn) {
@@ -57,8 +57,18 @@ export default function AdminDashboard() {
             <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h2 className="font-display font-semibold text-2xl mb-2">Admin Access Required</h2>
             <p className="text-muted-foreground mb-6">Please login to access the admin dashboard</p>
-            <Button onClick={login} size="lg" className="tap-target">
-              Login
+            {isLoginError && loginError && (
+              <p className="text-sm text-destructive mb-4">
+                {loginError.message || "Login failed. Please try again."}
+              </p>
+            )}
+            <Button 
+              onClick={login} 
+              size="lg" 
+              className="tap-target"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? "Logging in..." : "Login"}
             </Button>
           </div>
         </Card>

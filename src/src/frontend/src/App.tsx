@@ -15,6 +15,8 @@ import { SiInstagram } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -24,11 +26,37 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import AuthTestPage from "./pages/AuthTestPage";
 
 function Layout() {
   const { totalItems } = useCartContext();
-  const { loginStatus, login, clear } = useInternetIdentity();
-  const isLoggedIn = loginStatus === "success";
+  const { loginStatus, login, clear, isLoggingIn, isLoginError, loginError, identity } = useInternetIdentity();
+  const isLoggedIn = loginStatus === "success" && identity && !identity.getPrincipal().isAnonymous();
+
+  // Show error toast when login fails (but not for "already authenticated")
+  useEffect(() => {
+    if (isLoginError && loginError) {
+      // Don't show error if user is already authenticated
+      if (loginError.message?.includes("already authenticated")) {
+        toast.success("You're already logged in!", {
+          description: "Access admin panel from the menu",
+        });
+      } else {
+        toast.error("Login failed", {
+          description: loginError.message || "Please try again",
+        });
+      }
+    }
+  }, [isLoginError, loginError]);
+
+  // Show success toast when login succeeds
+  useEffect(() => {
+    if (isLoggedIn) {
+      toast.success("Login successful", {
+        description: "Welcome to HRcollection Admin!",
+      });
+    }
+  }, [isLoggedIn]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -61,17 +89,19 @@ function Layout() {
             {isLoggedIn ? (
               <>
                 <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="tap-target">
-                    <User className="h-5 w-5" />
+                  <Button variant="default" size="sm" className="tap-target">
+                    <User className="h-5 w-5 sm:mr-2" />
+                    <span className="hidden sm:inline">Admin</span>
                   </Button>
                 </Link>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={clear}
-                  className="tap-target hidden sm:inline-flex"
+                  className="tap-target"
                 >
-                  Logout
+                  <span className="hidden sm:inline">Logout</span>
+                  <span className="sm:hidden">✕</span>
                 </Button>
               </>
             ) : (
@@ -79,9 +109,10 @@ function Layout() {
                 variant="default" 
                 size="sm" 
                 onClick={login}
+                disabled={isLoggingIn}
                 className="tap-target"
               >
-                Login
+                {isLoggingIn ? "Logging in..." : "Login"}
               </Button>
             )}
           </nav>
@@ -105,7 +136,7 @@ function Layout() {
               caffeine.ai
             </a>
           </p>
-          <p className="mt-3 flex items-center justify-center gap-2">
+          <p className="mt-3 flex items-center justify-center gap-4 flex-wrap">
             <a
               href="https://www.instagram.com/hrjewerlycollection/"
               target="_blank"
@@ -115,6 +146,12 @@ function Layout() {
               <SiInstagram className="h-4 w-4" />
               <span>@hrjewerlycollection</span>
             </a>
+            <Link
+              to="/auth-test"
+              className="text-muted-foreground hover:text-primary transition-colors text-xs"
+            >
+              Login Issues? Test Here
+            </Link>
           </p>
         </div>
       </footer>
@@ -168,6 +205,12 @@ const adminRoute = createRoute({
   component: AdminDashboard,
 });
 
+const authTestRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth-test",
+  component: AuthTestPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   productsRoute,
@@ -176,6 +219,7 @@ const routeTree = rootRoute.addChildren([
   checkoutRoute,
   orderRoute,
   adminRoute,
+  authTestRoute,
 ]);
 
 const router = createRouter({ routeTree });
