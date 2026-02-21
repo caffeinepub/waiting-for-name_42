@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+    /* Warm cream background, deep brown text */
+    --background: 0.98 0.01 60;
+    --foreground: 0.25 0.02 40;
+    /* Card: slightly lighter warm white */
+    --card: 1 0 0;
+    --card-foreground: 0.25 0.02 40;
+    /* Popover */
+    --popover: 1 0 0;
+    --popover-foreground: 0.25 0.02 40;
+    /* Primary: vibrant warm orange */
+    --primary: 0.65 0.18 45;
+    --primary-foreground: 1 0 0;
+    /* Secondary: soft peach */
+    --secondary: 0.92 0.04 50;
+    --secondary-foreground: 0.35 0.03 40;
+    /* Muted: warm gray */
+    --muted: 0.93 0.01 55;
+    --muted-foreground: 0.55 0.01 45;
+    /* Accent: deep teal for trust/payment */
+    --accent: 0.55 0.12 200;
+    --accent-foreground: 1 0 0;
+    /* Success: fresh green */
+    --success: 0.62 0.15 145;
+    --success-foreground: 1 0 0;
+    /* Destructive: warm red */
+    --destructive: 0.60 0.22 25;
+    --destructive-foreground: 1 0 0;
+    /* Borders and inputs */
+    --border: 0.88 0.01 50;
+    --input: 0.88 0.01 50;
+    --ring: 0.65 0.18 45;
+    /* Charts */
+    --chart-1: 0.65 0.18 45;
+    --chart-2: 0.55 0.12 200;
+    --chart-3: 0.62 0.15 145;
+    --chart-4: 0.70 0.16 320;
+    --chart-5: 0.58 0.14 270;
+  }
+
+  .dark {
+    /* Dark: deep warm brown background */
+    --background: 0.18 0.02 35;
+    --foreground: 0.95 0.01 60;
+    /* Card: slightly lighter brown */
+    --card: 0.22 0.02 38;
+    --card-foreground: 0.95 0.01 60;
+    /* Popover */
+    --popover: 0.25 0.02 40;
+    --popover-foreground: 0.95 0.01 60;
+    /* Primary: brighter orange for dark mode */
+    --primary: 0.72 0.20 50;
+    --primary-foreground: 0.15 0.02 35;
+    /* Secondary: muted warm */
+    --secondary: 0.30 0.03 45;
+    --secondary-foreground: 0.95 0.01 60;
+    /* Muted */
+    --muted: 0.28 0.02 42;
+    --muted-foreground: 0.65 0.01 50;
+    /* Accent: bright teal */
+    --accent: 0.62 0.14 200;
+    --accent-foreground: 0.15 0.02 35;
+    /* Success */
+    --success: 0.68 0.16 145;
+    --success-foreground: 0.15 0.02 35;
+    /* Destructive */
+    --destructive: 0.65 0.24 25;
+    --destructive-foreground: 0.95 0.01 60;
+    /* Borders */
+    --border: 0.32 0.02 40;
+    --input: 0.32 0.02 40;
+    --ring: 0.72 0.20 50;
+    /* Charts */
+    --chart-1: 0.72 0.20 50;
+    --chart-2: 0.62 0.14 200;
+    --chart-3: 0.68 0.16 145;
+    --chart-4: 0.75 0.18 320;
+    --chart-5: 0.64 0.16 270;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+}
+
+@layer utilities {
+  .tap-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
