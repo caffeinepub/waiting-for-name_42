@@ -68,7 +68,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="font-display font-bold text-3xl md:text-4xl mb-8">Admin Dashboard</h1>
+      <h1 className="font-display font-semibold text-4xl md:text-5xl mb-8">HRcollection Admin</h1>
 
       <Tabs defaultValue="products" className="space-y-6">
         <TabsList className="grid w-full max-w-md grid-cols-2">
@@ -96,8 +96,116 @@ export default function AdminDashboard() {
 
 function ProductsTab() {
   const { data: products = [], isLoading } = useProducts();
+  const createProduct = useCreateProduct();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoadingSamples, setIsLoadingSamples] = useState(false);
+
+  const handleLoadSamples = async () => {
+    setIsLoadingSamples(true);
+    
+    const sampleProducts = [
+      {
+        name: "Classic Black Abaya",
+        description: "Elegant and timeless black abaya perfect for everyday wear. Made from premium breathable fabric with modest fit.",
+        price: 3500,
+        stock: 15,
+        category: "Abayas",
+        imageUrl: "/assets/generated/abaya-black.dim_800x800.jpg",
+      },
+      {
+        name: "Embroidered Navy Abaya",
+        description: "Luxurious navy blue abaya with intricate gold embroidery on sleeves and neckline. Perfect for special occasions.",
+        price: 5500,
+        stock: 8,
+        category: "Abayas",
+        imageUrl: "/assets/generated/abaya-embroidered.dim_800x800.jpg",
+      },
+      {
+        name: "Premium Chiffon Hijab",
+        description: "Soft and lightweight chiffon hijab in beautiful pastel pink. Easy to style and comfortable for all-day wear.",
+        price: 850,
+        stock: 30,
+        category: "Hijabs",
+        imageUrl: "/assets/generated/hijab-chiffon.dim_800x800.jpg",
+      },
+      {
+        name: "Cotton Jersey Hijab",
+        description: "Ultra-soft cotton jersey hijab in warm beige. Non-slip material that stays in place throughout the day.",
+        price: 650,
+        stock: 40,
+        category: "Hijabs",
+        imageUrl: "/assets/generated/hijab-jersey.dim_800x800.jpg",
+      },
+      {
+        name: "Elegant Tote Bag",
+        description: "Spacious camel brown leather tote bag perfect for daily use. Features multiple compartments and durable construction.",
+        price: 4200,
+        stock: 12,
+        category: "Bags",
+        imageUrl: "/assets/generated/bag-tote.dim_800x800.jpg",
+      },
+      {
+        name: "Chic Crossbody Bag",
+        description: "Stylish black crossbody bag with elegant gold chain strap. Compact yet spacious, perfect for outings.",
+        price: 3800,
+        stock: 10,
+        category: "Bags",
+        imageUrl: "/assets/generated/bag-crossbody.dim_800x800.jpg",
+      },
+      {
+        name: "Luxury Oud Perfume",
+        description: "Rich and captivating oud fragrance with warm woody notes. Long-lasting premium Arabian perfume in elegant bottle.",
+        price: 2500,
+        stock: 20,
+        category: "Perfumes",
+        imageUrl: "/assets/generated/perfume-oud.dim_800x800.jpg",
+      },
+      {
+        name: "Floral Musk Perfume",
+        description: "Delicate floral musk scent with hints of jasmine and rose. Perfect for daily wear with lasting freshness.",
+        price: 2200,
+        stock: 25,
+        category: "Perfumes",
+        imageUrl: "/assets/generated/perfume-musk.dim_800x800.jpg",
+      },
+      {
+        name: "Decorative Hijab Pins Set",
+        description: "Beautiful set of 6 hijab pins adorned with pearls and crystals. Gold and silver tones in elegant designs.",
+        price: 950,
+        stock: 35,
+        category: "Accessories",
+        imageUrl: "/assets/generated/accessories-pins.dim_800x800.jpg",
+      },
+      {
+        name: "Elegant Brooch Collection",
+        description: "Set of 3 stunning brooches featuring Islamic geometric patterns with gold finish and pearl accents.",
+        price: 1200,
+        stock: 28,
+        category: "Accessories",
+        imageUrl: "/assets/generated/accessories-brooches.dim_800x800.jpg",
+      },
+    ];
+
+    try {
+      for (const product of sampleProducts) {
+        await createProduct.mutateAsync({
+          name: product.name,
+          description: product.description,
+          price: BigInt(product.price),
+          imageUrl: product.imageUrl,
+          stock: BigInt(product.stock),
+          category: product.category,
+        });
+      }
+      toast.success("10 sample products loaded successfully!");
+    } catch (error) {
+      toast.error("Failed to load sample products");
+      console.error(error);
+    } finally {
+      setIsLoadingSamples(false);
+    }
+  };
 
   return (
     <Card>
@@ -134,7 +242,15 @@ function ProductsTab() {
         ) : products.length === 0 ? (
           <div className="text-center py-12">
             <Package className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">No products yet. Add your first product!</p>
+            <p className="text-muted-foreground mb-4">No products yet. Add your first product!</p>
+            <Button
+              onClick={handleLoadSamples}
+              disabled={isLoadingSamples}
+              variant="outline"
+              className="tap-target"
+            >
+              {isLoadingSamples ? "Loading..." : "Load Sample Products"}
+            </Button>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -215,7 +331,7 @@ function ProductForm({
     price: product ? Number(product.price) : 0,
     imageUrl: product?.imageUrl || "",
     stock: product ? Number(product.stock) : 0,
-    category: product?.category || "",
+    category: product?.category || "Abayas",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -311,13 +427,22 @@ function ProductForm({
         </div>
         <div>
           <Label htmlFor="category">Category *</Label>
-          <Input
-            id="category"
+          <Select
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onValueChange={(value) => setFormData({ ...formData, category: value })}
             required
-            className="mt-1.5"
-          />
+          >
+            <SelectTrigger className="mt-1.5">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Abayas">Abayas</SelectItem>
+              <SelectItem value="Hijabs">Hijabs</SelectItem>
+              <SelectItem value="Bags">Bags</SelectItem>
+              <SelectItem value="Perfumes">Perfumes</SelectItem>
+              <SelectItem value="Accessories">Accessories</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div>
           <Label htmlFor="imageUrl">Image URL *</Label>

@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "./contexts/CartContext";
 import { useCartContext } from "./contexts/CartContext";
 import { ShoppingCart, Store, User } from "lucide-react";
+import { SiInstagram } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
@@ -35,7 +36,7 @@ function Layout() {
         <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2 tap-target">
             <Store className="h-6 w-6 text-primary" />
-            <span className="font-display font-bold text-xl">Shop</span>
+            <span className="font-display font-bold text-2xl tracking-wide">HRcollection</span>
           </Link>
           
           <nav className="flex items-center gap-2 sm:gap-4">
@@ -102,6 +103,17 @@ function Layout() {
               className="text-primary hover:underline"
             >
               caffeine.ai
+            </a>
+          </p>
+          <p className="mt-3 flex items-center justify-center gap-2">
+            <a
+              href="https://www.instagram.com/hrjewerlycollection/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <SiInstagram className="h-4 w-4" />
+              <span>@hrjewerlycollection</span>
             </a>
           </p>
         </div>

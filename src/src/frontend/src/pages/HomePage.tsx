@@ -4,33 +4,49 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, ShoppingBag } from "lucide-react";
+import { SiInstagram } from "react-icons/si";
 
 export default function HomePage() {
   const { data: products = [], isLoading } = useProducts();
   const featuredProducts = products.slice(0, 6);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Hero Section */}
-      <section className="text-center py-12 md:py-20">
-        <h1 className="font-display font-bold text-4xl md:text-6xl mb-4 text-foreground">
-          Welcome to Our Shop
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Discover amazing products with fast delivery and flexible payment options
-        </p>
-        <Link to="/products">
-          <Button size="lg" className="tap-target text-lg font-semibold">
-            Browse Products
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </Link>
+    <div>
+      {/* Hero Banner Section */}
+      <section className="relative w-full h-[400px] md:h-[500px] overflow-hidden mb-12">
+        {/* Banner Image */}
+        <img
+          src="/assets/generated/banner-hero-1.dim_1200x500.jpg"
+          alt="Elegant modest abaya fashion - HRcollection Islamic wear for modern Muslim women"
+          className="w-full h-full object-cover"
+        />
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        
+        {/* Hero Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="font-display font-semibold text-4xl md:text-6xl lg:text-7xl mb-4 text-white leading-tight max-w-4xl">
+            Welcome to <span className="font-bold italic">HRcollection</span>
+          </h1>
+          <p className="text-base md:text-lg lg:text-xl text-white/95 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Discover elegant abayas, premium hijabs, and refined modest fashion accessories
+          </p>
+          <Link to="/products">
+            <Button size="lg" className="tap-target text-lg font-semibold px-10 py-7 rounded-full bg-white text-primary hover:bg-white/95 shadow-xl hover:shadow-2xl transition-all duration-200">
+              Shop Now
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display font-bold text-2xl md:text-3xl">Featured Products</h2>
+      <div className="container mx-auto px-4 py-8">
+
+        {/* Featured Products */}
+        <section className="py-12">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="font-display font-semibold text-3xl md:text-4xl">Featured Collection</h2>
           <Link to="/products">
             <Button variant="outline" className="tap-target">
               View All
@@ -89,42 +105,70 @@ export default function HomePage() {
             ))}
           </div>
         )}
-      </section>
+        </section>
 
-      {/* Features */}
-      <section className="py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="text-center p-6">
-          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ShoppingBag className="h-6 w-6 text-primary" />
-          </div>
-          <h3 className="font-display font-semibold text-lg mb-2">Easy Shopping</h3>
-          <p className="text-sm text-muted-foreground">
-            Browse and order your favorite products with just a few taps
-          </p>
-        </Card>
-        <Card className="text-center p-6">
-          <div className="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h3 className="font-display font-semibold text-lg mb-2">Flexible Payment</h3>
-          <p className="text-sm text-muted-foreground">
-            Pay with Cash on Delivery, EasyPaisa, or JazzCash
-          </p>
-        </Card>
-        <Card className="text-center p-6">
-          <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h3 className="font-display font-semibold text-lg mb-2">WhatsApp Support</h3>
-          <p className="text-sm text-muted-foreground">
-            Get instant support via WhatsApp at 03281325899
-          </p>
-        </Card>
-      </section>
+        {/* Features */}
+        <section className="py-16 grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <Link to="/products" className="block">
+          <Card className="text-center p-8 border-2 hover:border-primary/50 transition-colors h-full cursor-pointer hover:shadow-lg">
+            <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+              <ShoppingBag className="h-7 w-7 text-primary" />
+            </div>
+            <h3 className="font-display font-semibold text-xl mb-3">Modest Fashion</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Curated selection of elegant Islamic clothing and accessories designed for the modern Muslim woman
+            </p>
+          </Card>
+        </Link>
+        <Link to="/checkout" className="block">
+          <Card className="text-center p-8 border-2 hover:border-primary/50 transition-colors h-full cursor-pointer hover:shadow-lg">
+            <div className="w-14 h-14 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-5">
+              <svg className="h-7 w-7 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-xl mb-3">Flexible Payment</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Cash on Delivery, EasyPaisa, or JazzCash — choose what works best for you
+            </p>
+          </Card>
+        </Link>
+        <a
+          href="https://wa.me/923281325899"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <Card className="text-center p-8 border-2 hover:border-primary/50 transition-colors h-full cursor-pointer hover:shadow-lg">
+            <div className="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-5">
+              <svg className="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <h3 className="font-display font-semibold text-xl mb-3">WhatsApp Support</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Get instant personalized support via WhatsApp at 03281325899
+            </p>
+          </Card>
+        </a>
+        <a
+          href="https://www.instagram.com/hrjewerlycollection/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <Card className="text-center p-8 border-2 hover:border-primary/50 transition-colors h-full cursor-pointer hover:shadow-lg">
+            <div className="w-14 h-14 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+              <SiInstagram className="h-7 w-7 text-pink-500" />
+            </div>
+            <h3 className="font-display font-semibold text-xl mb-3">Follow Us on Instagram</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Stay updated with our latest collections and exclusive offers @hrjewerlycollection
+            </p>
+          </Card>
+        </a>
+        </section>
+      </div>
     </div>
   );
 }

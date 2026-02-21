@@ -13,10 +13,8 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const categories = useMemo(() => {
-    const cats = new Set(products.map((p) => p.category));
-    return Array.from(cats).sort();
-  }, [products]);
+  // Define explicit categories for HRcollection
+  const hrCategories = ["Abayas", "Hijabs", "Bags", "Perfumes", "Accessories"];
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
@@ -40,53 +38,51 @@ export default function ProductsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-3xl md:text-4xl mb-6">All Products</h1>
+      <div className="mb-10">
+        <h1 className="font-display font-semibold text-4xl md:text-5xl mb-8">Our Collection</h1>
 
         {/* Search Bar */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <div className="relative mb-8">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search our collection..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-10 h-12 text-base"
+            className="pl-12 pr-12 h-14 text-base rounded-full border-2 focus:border-primary"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 tap-target"
+              className="absolute right-4 top-1/2 -translate-y-1/2 tap-target"
             >
-              <X className="h-5 w-5 text-muted-foreground" />
+              <X className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
             </button>
           )}
         </div>
 
         {/* Category Filter */}
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Button
+            variant={selectedCategory === null ? "default" : "outline"}
+            size="lg"
+            onClick={() => setSelectedCategory(null)}
+            className="tap-target rounded-full px-6 font-semibold"
+          >
+            All Products
+          </Button>
+          {hrCategories.map((category) => (
             <Button
-              variant={selectedCategory === null ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(null)}
-              className="tap-target"
+              key={category}
+              variant={selectedCategory === category ? "default" : "outline"}
+              size="lg"
+              onClick={() => setSelectedCategory(category)}
+              className="tap-target rounded-full px-6 font-semibold"
             >
-              All
+              {category}
             </Button>
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-                className="tap-target"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
 
       {/* Products Grid */}
@@ -128,42 +124,42 @@ export default function ProductsPage() {
         </Card>
       ) : (
         <>
-          <div className="mb-4 text-sm text-muted-foreground">
-            Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
+          <div className="mb-6 text-base text-muted-foreground font-medium">
+            {filteredProducts.length} {filteredProducts.length !== 1 ? "items" : "item"}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
               <Link key={product.id.toString()} to="/products/$id" params={{ id: product.id.toString() }}>
-                <Card className="h-full hover:shadow-lg transition-shadow duration-200 overflow-hidden group">
+                <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden group border-2 hover:border-primary/30">
                   <div className="aspect-square overflow-hidden bg-muted relative">
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     {Number(product.stock) === 0 && (
-                      <Badge className="absolute top-2 right-2" variant="destructive">
+                      <Badge className="absolute top-3 right-3 text-xs px-3 py-1" variant="destructive">
                         Out of Stock
                       </Badge>
                     )}
                   </div>
-                  <CardContent className="pt-4">
-                    <Badge variant="secondary" className="mb-2">
+                  <CardContent className="pt-5 pb-3">
+                    <Badge variant="secondary" className="mb-3 text-xs font-medium">
                       {product.category}
                     </Badge>
-                    <h3 className="font-display font-semibold text-lg mb-1 line-clamp-1">
+                    <h3 className="font-display font-semibold text-xl mb-2 line-clamp-1">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
                       {product.description}
                     </p>
                   </CardContent>
-                  <CardFooter className="pt-0 flex justify-between items-center">
-                    <p className="font-display font-bold text-xl text-primary">
+                  <CardFooter className="pt-0 pb-5 flex justify-between items-center">
+                    <p className="font-display font-bold text-2xl text-primary">
                       Rs. {Number(product.price).toLocaleString()}
                     </p>
                     {Number(product.stock) > 0 && Number(product.stock) <= 5 && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs font-medium">
                         Only {Number(product.stock)} left
                       </Badge>
                     )}
