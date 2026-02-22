@@ -46,8 +46,9 @@ import { toast } from "sonner";
 import type { Product } from "../backend";
 
 export default function AdminDashboard() {
-  const { loginStatus, login, isLoggingIn, isLoginError, loginError } = useInternetIdentity();
-  const isLoggedIn = loginStatus === "success";
+  const { loginStatus, login, isLoggingIn, isLoginError, loginError, identity } = useInternetIdentity();
+  // User is logged in if they have a valid identity (either from fresh login or loaded from storage)
+  const isLoggedIn = identity && !identity.getPrincipal().isAnonymous();
 
   if (!isLoggedIn) {
     return (
