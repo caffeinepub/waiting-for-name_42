@@ -111,6 +111,7 @@ function ProductsTab() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
+  const [currentTab, setCurrentTab] = useState<"products" | "orders">("products");
 
   const handleLoadSamples = async () => {
     setIsLoadingSamples(true);
@@ -219,30 +220,32 @@ function ProductsTab() {
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="font-display text-2xl">Products</CardTitle>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              onClick={() => setEditingProduct(null)}
-              className="tap-target"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <ProductForm
-              product={editingProduct}
-              onClose={() => {
-                setIsDialogOpen(false);
-                setEditingProduct(null);
-              }}
-            />
-          </DialogContent>
-        </Dialog>
-      </CardHeader>
+    <>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-background to-muted/20 border-b">
+          <CardTitle className="font-display text-2xl">Products</CardTitle>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                onClick={() => setEditingProduct(null)}
+                size="lg"
+                className="tap-target bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-base px-6"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                Add Product
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <ProductForm
+                product={editingProduct}
+                onClose={() => {
+                  setIsDialogOpen(false);
+                  setEditingProduct(null);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="space-y-3">
@@ -252,16 +255,30 @@ function ProductsTab() {
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
-            <Package className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground mb-4">No products yet. Add your first product!</p>
-            <Button
-              onClick={handleLoadSamples}
-              disabled={isLoadingSamples}
-              variant="outline"
-              className="tap-target"
-            >
-              {isLoadingSamples ? "Loading..." : "Load Sample Products"}
-            </Button>
+            <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground text-lg mb-6">No products yet. Add your first product!</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <Button
+                onClick={handleLoadSamples}
+                disabled={isLoadingSamples}
+                size="lg"
+                className="tap-target bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md font-semibold w-full sm:w-auto"
+              >
+                {isLoadingSamples ? "Loading..." : "Load Sample Products"}
+              </Button>
+              <Button
+                onClick={() => {
+                  setEditingProduct(null);
+                  setIsDialogOpen(true);
+                }}
+                size="lg"
+                variant="outline"
+                className="tap-target border-2 border-primary hover:bg-primary/10 font-semibold w-full sm:w-auto"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                Add Product Manually
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -324,6 +341,30 @@ function ProductsTab() {
         )}
       </CardContent>
     </Card>
+
+    {/* Floating Action Button (FAB) for Mobile - Only on Products Tab */}
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={() => setEditingProduct(null)}
+          size="lg"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl hover:shadow-3xl z-50 bg-gradient-to-br from-primary via-primary to-primary/80 hover:scale-110 transition-all duration-300 md:hidden animate-pulse hover:animate-none p-0"
+          aria-label="Add Product"
+        >
+          <Plus className="h-7 w-7" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <ProductForm
+          product={editingProduct}
+          onClose={() => {
+            setIsDialogOpen(false);
+            setEditingProduct(null);
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  </>
   );
 }
 
